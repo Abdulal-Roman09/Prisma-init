@@ -5,7 +5,13 @@ const prisma = new PrismaClient()
 const main = async () => {
 
     // Fetch all posts from the database
-    const getAllFromDB = await prisma.post.findMany()
+    const getAllFromDB = await prisma.post.findMany({
+        select: {
+            title: true,
+            content: true,
+            authorName: true
+        }
+    })
 
     // Fetch the first post that matches the condition
     // Throws an error if no post is found
@@ -20,6 +26,10 @@ const main = async () => {
     const findUnique = await prisma.post.findUniqueOrThrow({
         where: {
             id: 2
+        }, select: {
+            title: true,
+            content: true,
+            authorName: true
         }
     })
 }
