@@ -11,14 +11,12 @@ const update = async () => {
             id: 6
         },
         data: {
-            title: "updated",
-            content: "updated post",
-            authorName: "updated Shovo",
+            published: true
         }
     })
 
     // Upsert → Update if record exists, otherwise create
-    
+
     const upsertData = await prisma.post.upsert({
         where: {
             id: 10
