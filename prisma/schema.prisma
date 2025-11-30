@@ -7,3 +7,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Post {
+  id           Int            @id @default(autoincrement())
+  title        String
+  content      String?
+  authorId     Int
+  author       User           @relation(fields: [authorId], references: [id])
+  published    Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  postCategory PostCategory[]
+
+  @@map("posts")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String
+  email    String   @unique
+  role     UserRole @default(user)
+  profile  Profile? // one-to-one
+  posts    Post[] // one-to-many
+
+  @@map("user")
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  bio    String
+  userId Int    @unique
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("profile")
+}
+
+model Category {
+  id           Int            @id @default(autoincrement())
+  name         String
+  postCategory PostCategory[]
+
+  @@map("categories")
+}
+
+model PostCategory {
+  postId     Int
+  post       Post     @relation(fields: [postId], references: [id])
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([postId, categoryId])
+  @@map("post_category")
+}
+
+enum UserRole {
+  user
+  admin
+}
